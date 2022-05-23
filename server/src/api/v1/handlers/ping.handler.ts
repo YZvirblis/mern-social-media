@@ -1,5 +1,7 @@
+import config from "config";
+
 const sendMePong = () => {
-  return "Pong";
+  return config.get("TEST.message");
 };
 
 export { sendMePong };

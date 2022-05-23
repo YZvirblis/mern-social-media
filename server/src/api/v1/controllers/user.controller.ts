@@ -1,31 +1,104 @@
 import { Request, Response, Router, NextFunction, request } from "express";
-import { getUserHandler, registerUserHandler } from "../handlers/user.handler";
+import {
+  getUserHandler,
+  registerUserHandler,
+  loginUserHandler,
+  updateUserHandler,
+  deleteUserHandler,
+  followUserHandler,
+  unfollowUserHandler,
+} from "../handlers/user.handler";
 
 const UserController = () => {
   const router = Router();
-  router.get("/", getUser);
+  router.get("/:id", getUser);
   router.post("/register", registerUser);
+  router.post("/login", loginUser);
+  router.put("/update/:id", updateUser);
+  router.delete("/delete/:id", deleteUser);
+  router.put("/follow/:id", followUser);
+  router.put("/unfollow/:id", unfollowUser);
+
   return router;
 };
 
+// GET USER BY ID
 const getUser = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const res = await getUserHandler();
-  console.log("RES FROM CONTROLLER: ", res);
-  response.send(res);
+  const res: any = await getUserHandler(request.params.id);
+  response.status(res.status).json(res.message);
 };
 
+// REGISTRATION CONTROLLER
 const registerUser = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
   const { username, email, password } = request.body;
-  const res = await registerUserHandler(username, email, password);
-  console.log("RES: ", res);
+  const res: any = await registerUserHandler(username, email, password);
+  response.status(res.status).json(res.message);
+};
+
+// LOGIN CONTROLLER
+const loginUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { username, password } = request.body;
+  const res: any = await loginUserHandler(username, password);
+
+  response.status(res.status).json(res.message);
+};
+
+// UPDATE CONTROLLER
+const updateUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const paramID = request.params.id;
+  const user = request.body;
+  const res: any = await updateUserHandler(paramID, user);
+  response.status(res.status).json(res.message);
+};
+
+// DELETE CONTROLLER
+const deleteUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const res: any = await deleteUserHandler(request.params.id, request.body);
+  response.status(res.status).json(res.message);
+};
+
+// FOLLOW CONTROLLER
+const followUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const paramID = request.params.id;
+  const userID = request.body.id;
+  const res: any = await followUserHandler(paramID, userID);
+  response.status(res.status).json(res.message);
+};
+
+// UNFOLLOW CONTROLLER
+const unfollowUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const paramID = request.params.id;
+  const userID = request.body.id;
+  const res: any = await unfollowUserHandler(paramID, userID);
+  response.status(res.status).json(res.message);
 };
 
 export { UserController };
