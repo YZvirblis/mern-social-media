@@ -3,7 +3,7 @@ import IPost from "../interfaces/post.interface";
 
 const postSchema = new mongoose.Schema<IPost>(
   {
-    userId: {
+    userID: {
       type: String,
       required: true,
     },

@@ -1,5 +1,5 @@
 interface IPost {
-  userId: string;
+  userID: string;
   desc?: string;
   img?: string;
   likes?: string[];
