@@ -1,6 +1,7 @@
 import Post from "../models/post.model";
 import User from "../models/user.model";
 import IPost from "../interfaces/post.interface";
+import IUser from "../interfaces/user.interface";
 
 // CREATE POST
 const createPostHandler = async (post: IPost) => {
@@ -103,6 +104,18 @@ const getPostsHandler = async (userID: string) => {
   }
 };
 
+// GET ALL USER TIMELINE POSTS
+const getUserPostsHandler = async (username: string) => {
+  try {
+    const currentUser: IUser | null = await User.findOne({ username });
+    const userPosts: IPost[] = await Post.find({ userID: currentUser?._id });
+    return { message: userPosts, status: 200 };
+  } catch (err) {
+    console.log(err);
+    return { message: err, status: 500 };
+  }
+};
+
 export {
   createPostHandler,
   updatePostHandler,
@@ -110,4 +123,5 @@ export {
   likePostHandler,
   getPostHandler,
   getPostsHandler,
+  getUserPostsHandler,
 };

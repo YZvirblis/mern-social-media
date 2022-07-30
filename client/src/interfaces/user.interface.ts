@@ -11,7 +11,7 @@ interface IUser {
   city: string;
   from: string;
   relationship: number;
-  _id: any;
+  id: any;
 }
 
 export default IUser;

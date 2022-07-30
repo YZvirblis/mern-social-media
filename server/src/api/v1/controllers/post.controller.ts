@@ -6,6 +6,7 @@ import {
   likePostHandler,
   getPostHandler,
   getPostsHandler,
+  getUserPostsHandler,
 } from "../handlers/post.handler";
 
 const PostController = () => {
@@ -15,7 +16,8 @@ const PostController = () => {
   router.delete("/delete/:id", deletePost);
   router.put("/like/:id", likePost);
   router.get("/single/:id", getPost);
-  router.get("/timeline", getPosts);
+  router.get("/feed/:id", getPosts);
+  router.get("/timeline/:username", getUserPosts);
   return router;
 };
 
@@ -84,8 +86,19 @@ const getPosts = async (
   response: Response,
   next: NextFunction
 ) => {
-  const userID = request.body.userID;
+  const userID = request.params.id;
   const res: any = await getPostsHandler(userID);
+  response.status(res.status).json(res.message);
+};
+
+// GET ALL USER TIMELINE POSTS
+const getUserPosts = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const username = request.params.username;
+  const res: any = await getUserPostsHandler(username);
   response.status(res.status).json(res.message);
 };
 

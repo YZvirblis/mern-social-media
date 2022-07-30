@@ -6,6 +6,8 @@ import Topbar from "../../components/topbar";
 import "./profilePage.css";
 
 function ProfilePage() {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
   return (
     <>
       <Topbar />
@@ -15,12 +17,12 @@ function ProfilePage() {
           <div className="profileRightTop">
             <div className="profileCover">
               <img
-                src="assets/post/3.jpeg"
+                src={`${PF}post/3.jpeg`}
                 alt="cover"
                 className="profileCoverImg"
               />
               <img
-                src="assets/person/1.jpeg"
+                src={`${PF}person/1.jpeg`}
                 alt="person"
                 className="profileUserImg"
               />

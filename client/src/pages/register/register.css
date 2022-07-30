@@ -42,6 +42,11 @@
   justify-content: space-between;
 }
 
+.error {
+  color: red;
+  font-size: 18px;
+}
+
 .loginInput {
   height: 50px;
   border-radius: 10px;
@@ -71,6 +76,7 @@
 }
 
 .loginRegisterButton {
+  text-align: center;
   width: 60%;
   align-self: center;
   height: 50px;

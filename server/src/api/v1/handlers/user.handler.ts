@@ -1,10 +1,16 @@
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import IUser from "../interfaces/user.interface";
+import { ParsedQs } from "qs";
 
-const getUserHandler = async (id: string) => {
+const getUserHandler = async (
+  id?: string | ParsedQs | string[] | ParsedQs[] | undefined,
+  username?: string | ParsedQs | string[] | ParsedQs[] | undefined
+) => {
   try {
-    const user: any = await User.findById(id);
+    const user: any = id
+      ? await User.findById(id)
+      : await User.findOne({ username });
     const { password, updatedAt, ...other } = user._doc;
     return { message: other, status: 200 };
   } catch (err: any) {
@@ -15,12 +21,12 @@ const getUserHandler = async (id: string) => {
 const registerUserHandler = async (
   username: string,
   email: string,
-  password: string
+  pass: string
 ) => {
   try {
     // GENERATE HASHED PASSWORD
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(pass, salt);
 
     // CREATE NEW USER
     const newUser = new User({
@@ -31,10 +37,15 @@ const registerUserHandler = async (
 
     // SAVE USER TO DB
     await newUser.save();
-    return { message: newUser, status: 201 };
+    const { password, ...rest } = newUser;
+    //@ts-ignore
+    return { message: rest._doc, status: 201 };
   } catch (err: any) {
     if (err.code === 11000) {
-      return { message: "User already exists.", status: 409 };
+      return {
+        message: "User with that name or email already exists.",
+        status: 409,
+      };
     } else {
       return { message: "Something went wrong.", status: 400 };
     }
@@ -60,7 +71,7 @@ const loginUserHandler = async (username: string, password: string) => {
 };
 
 const updateUserHandler = async (paramID: string, user: IUser) => {
-  if (user.id === paramID || user.isAdmin) {
+  if (user._id === paramID || user.isAdmin) {
     if (user.password) {
       try {
         const salt = await bcrypt.genSalt(10);
@@ -83,7 +94,7 @@ const updateUserHandler = async (paramID: string, user: IUser) => {
 };
 
 const deleteUserHandler = async (paramID: string, user: IUser) => {
-  if (user.id === paramID || user.isAdmin) {
+  if (user._id === paramID || user.isAdmin) {
     try {
       //@ts-ignore
       await User.findByIdAndDelete(paramID);

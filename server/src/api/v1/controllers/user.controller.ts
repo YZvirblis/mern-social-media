@@ -11,7 +11,7 @@ import {
 
 const UserController = () => {
   const router = Router();
-  router.get("/:id", getUser);
+  router.get("/", getUser);
   router.post("/register", registerUser);
   router.post("/login", loginUser);
   router.put("/update/:id", updateUser);
@@ -28,7 +28,9 @@ const getUser = async (
   response: Response,
   next: NextFunction
 ) => {
-  const res: any = await getUserHandler(request.params.id);
+  const userID = request.params.id;
+  const username = request.query.username;
+  const res: any = await getUserHandler(userID, username);
   response.status(res.status).json(res.message);
 };
 
@@ -40,7 +42,8 @@ const registerUser = async (
 ) => {
   const { username, email, password } = request.body;
   const res: any = await registerUserHandler(username, email, password);
-  response.status(res.status).json(res.message);
+  console.log(res.message);
+  response.status(res.status).send(res.message);
 };
 
 // LOGIN CONTROLLER

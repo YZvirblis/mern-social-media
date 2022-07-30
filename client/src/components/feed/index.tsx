@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post from "../post";
 import Share from "../share";
 import "./feed.css";
-import { Posts } from "../../dummyData";
+import * as postAPI from "../../api/post.api.controller";
+import IPost from "../../interfaces/post.interface";
 
-function Feed() {
+interface props {
+  username?: string;
+}
+
+function Feed({ username }: props): JSX.Element {
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  const fetchTimeline = async () => {
+    const res = username
+      ? await postAPI.getUserPosts(username)
+      : await postAPI.getFeed();
+    setPosts(res);
+  };
+
+  useEffect(() => {
+    fetchTimeline();
+  }, [username]);
+
   return (
     <div className="feed">
       <div className="feedWrapper">
         <Share />
-        {Posts.map((p) => {
-          return <Post key={p.id} post={p} />;
+        {posts.map((p: IPost) => {
+          return <Post key={p._id} post={p} />;
         })}
       </div>
     </div>

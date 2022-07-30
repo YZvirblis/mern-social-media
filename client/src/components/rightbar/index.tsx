@@ -3,13 +3,17 @@ import "./rightBar.css";
 import { Users } from "../../dummyData";
 import OnlineUser from "../onlineUser";
 
-function RightBar(props: any) {
+interface props {
+  profile?: boolean;
+}
+
+function RightBar({ profile }: props): JSX.Element {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const HomeRightbar = () => {
     return (
       <>
-        {" "}
         <div className="birthdayContainer">
-          <img className="birthdayImg" src="assets/gift.png" alt="birthday" />
+          <img className="birthdayImg" src={`${PF}gift.png`} alt="birthday" />
           <span className="birthdayText">
             <b>Pola Foster </b>
             and
@@ -17,11 +21,11 @@ function RightBar(props: any) {
             have a birthday today
           </span>
         </div>
-        <img className="rightbarAd" src="/assets/ad.png" alt="" />
+        <img className="rightbarAd" src={`${PF}ad.png`} alt="" />
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
           {Users.map((user) => {
-            return <OnlineUser user={user} />;
+            return <OnlineUser key={user.id} user={user} />;
           })}
         </ul>
       </>
@@ -50,31 +54,7 @@ function RightBar(props: any) {
         <div className="rightbarFollowings">
           <div className="rightbarFollowing">
             <img
-              src="assets/person/4.jpeg"
-              alt="person"
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="assets/person/4.jpeg"
-              alt="person"
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="assets/person/4.jpeg"
-              alt="person"
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="assets/person/4.jpeg"
+              src={`${PF}person/4.jpeg`}
               alt="person"
               className="rightbarFollowingImg"
             />
@@ -87,7 +67,7 @@ function RightBar(props: any) {
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
-        {props.profile ? <ProfileRightbar /> : <HomeRightbar />}
+        {profile ? <ProfileRightbar /> : <HomeRightbar />}
       </div>
     </div>
   );

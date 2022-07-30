@@ -1,64 +1,89 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./post.css";
 import { MoreVert } from "@material-ui/icons";
-import { Users } from "../../dummyData";
 import { useState } from "react";
+import * as userAPI from "../../api/user.api.controller";
+import IUser from "../../interfaces/user.interface";
+import IPost from "../../interfaces/post.interface";
+import { format } from "timeago.js";
+import { Link } from "react-router-dom";
 
-function Post(props: any) {
-  const [like, setLike] = useState(props.post.like);
+interface props {
+  post: IPost;
+}
+
+function Post({ post }: props): JSX.Element {
+  const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
-  const user = Users.filter((u) => u.id === props.post.userId)[0];
-  console.log(user);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+
+  const fetchPostUser = async (userID: string) => {
+    const res = await userAPI.getUser(userID);
+    setUser(res);
+  };
+
+  useEffect(() => {
+    fetchPostUser(post.userID);
+  }, [post.userID]);
+
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const handleLike = () => {
+    //@ts-ignore
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
   return (
-    <div className="post">
-      <div className="postWrapper">
-        <div className="postTop">
-          <div className="postTopLeft">
-            <img
-              className="postProfileImg"
-              src={`/assets/${user.profilePicture}`}
-              alt="profile"
-            />
-            <span className="postUsername">{user.username}</span>
-            <span className="postDate">{props.post.date}</span>
-          </div>
-          <div className="postTopRight">
-            <MoreVert />
+    <>
+      {user && post && (
+        <div className="post">
+          <div className="postWrapper">
+            <div className="postTop">
+              <div className="postTopLeft">
+                <Link to={`profile/${user.username}`}>
+                  <img
+                    className="postProfileImg"
+                    src={user.profilePicture || PF + "person/noAvatar.png"}
+                    alt=""
+                  />
+                </Link>
+                <span className="postUsername">{user.username}</span>
+                <span className="postDate">{format(post.createdAt)}</span>
+              </div>
+              <div className="postTopRight">
+                <MoreVert />
+              </div>
+            </div>
+            <div className="postCenter">
+              <span className="postText">{post.desc}</span>
+              <img src={post.img} alt="" className="postImg" />
+            </div>
+            <div className="postBottom">
+              <div className="postBottomLeft">
+                <img
+                  className="likeIcon"
+                  src={`${PF}like.png`}
+                  alt="like"
+                  onClick={handleLike}
+                />
+                <img
+                  className="likeIcon"
+                  src={`${PF}heart.png`}
+                  alt="heart"
+                  onClick={handleLike}
+                />
+                <span className="postLikeCounter">{like} people like this</span>
+              </div>
+              <div className="postBottomRight">
+                {/* <span className="postCommentText">
+                  {post.comment} comments
+                </span> */}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="postCenter">
-          <span className="postText">{props.post.desc}</span>
-          <img src={`assets/${props.post.photo}`} alt="" className="postImg" />
-        </div>
-        <div className="postBottom">
-          <div className="postBottomLeft">
-            <img
-              className="likeIcon"
-              src="assets/like.png"
-              alt="like"
-              onClick={handleLike}
-            />
-            <img
-              className="likeIcon"
-              src="assets/heart.png"
-              alt="heart"
-              onClick={handleLike}
-            />
-            <span className="postLikeCounter">{like} people like this</span>
-          </div>
-          <div className="postBottomRight">
-            <span className="postCommentText">
-              {props.post.comment} comments
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

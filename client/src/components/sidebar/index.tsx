@@ -60,7 +60,7 @@ function SideBar() {
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
           {Users.map((user) => {
-            return <Friend user={user} />;
+            return <Friend key={user.id} user={user} />;
           })}
         </ul>
       </div>
