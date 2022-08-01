@@ -105,10 +105,11 @@ const getPostsHandler = async (userID: string) => {
 };
 
 // GET ALL USER TIMELINE POSTS
-const getUserPostsHandler = async (username: string) => {
+const getUserPostsHandler = async (id: string) => {
   try {
-    const currentUser: IUser | null = await User.findOne({ username });
-    const userPosts: IPost[] = await Post.find({ userID: currentUser?._id });
+    // const currentUser: IUser | null = await User.findOne({ _id });
+    // const userPosts: IPost[] = await Post.find({ userID: currentUser?._id });
+    const userPosts: IPost[] = await Post.find({ userID: id });
     return { message: userPosts, status: 200 };
   } catch (err) {
     console.log(err);

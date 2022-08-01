@@ -11,7 +11,7 @@ import {
 
 const UserController = () => {
   const router = Router();
-  router.get("/", getUser);
+  router.get("/:id", getUser);
   router.post("/register", registerUser);
   router.post("/login", loginUser);
   router.put("/update/:id", updateUser);
@@ -52,8 +52,8 @@ const loginUser = async (
   response: Response,
   next: NextFunction
 ) => {
-  const { username, password } = request.body;
-  const res: any = await loginUserHandler(username, password);
+  const { email, password } = request.body;
+  const res: any = await loginUserHandler(email, password);
 
   response.status(res.status).json(res.message);
 };

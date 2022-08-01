@@ -35,7 +35,7 @@ function ProfilePage() {
             </div>
           </div>
           <div className="profileRightBottom">
-            <Feed />
+            <Feed isProfile={true} />
             <RightBar profile />
           </div>
         </div>

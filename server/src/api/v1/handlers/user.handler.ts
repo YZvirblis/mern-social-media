@@ -37,9 +37,9 @@ const registerUserHandler = async (
 
     // SAVE USER TO DB
     await newUser.save();
-    const { password, ...rest } = newUser;
     //@ts-ignore
-    return { message: rest._doc, status: 201 };
+    const { password, ...rest } = newUser._doc;
+    return { message: rest, status: 201 };
   } catch (err: any) {
     if (err.code === 11000) {
       return {
@@ -52,9 +52,9 @@ const registerUserHandler = async (
   }
 };
 
-const loginUserHandler = async (username: string, password: string) => {
+const loginUserHandler = async (email: string, password: string) => {
   try {
-    const user: IUser | null = await User.findOne({ username });
+    const user: IUser | null = await User.findOne({ email });
     if (!user) {
       return { message: "User not found", status: 404 };
     } else {
@@ -62,7 +62,9 @@ const loginUserHandler = async (username: string, password: string) => {
       if (!validPassword) {
         return { message: "Password is incorrect", status: 400 };
       } else {
-        return { message: user, status: 200 };
+        //@ts-ignore
+        const { password, ...rest } = user._doc;
+        return { message: rest, status: 200 };
       }
     }
   } catch (err) {

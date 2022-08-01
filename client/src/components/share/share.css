@@ -46,6 +46,14 @@
   align-items: center;
   margin-right: 15px;
   cursor: pointer;
+  padding: 5px;
+  margin-left: 5px;
+  transition: 500ms;
+  border-radius: 5%;
+}
+.shareOption:hover {
+  background-color: rgb(213, 213, 213);
+  transition: 500ms;
 }
 .shareIcon {
   font-size: 18px;

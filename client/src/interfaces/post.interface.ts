@@ -1,8 +1,8 @@
 interface IPost {
-  _id: string;
+  _id?: string;
   userID: string;
-  desc: string;
-  img: string;
+  desc?: string;
+  img?: string;
   likes: string[];
   createdAt: Date;
 }

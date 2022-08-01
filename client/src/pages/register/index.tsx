@@ -32,6 +32,7 @@ function RegisterPage() {
       if (res.user) {
         setError(null);
         dispatch(setUser(res.user));
+        window.localStorage.setItem("user", JSON.stringify(res.user));
         navigate("/");
       }
 

@@ -17,7 +17,7 @@ const PostController = () => {
   router.put("/like/:id", likePost);
   router.get("/single/:id", getPost);
   router.get("/feed/:id", getPosts);
-  router.get("/timeline/:username", getUserPosts);
+  router.get("/timeline/:id", getUserPosts);
   return router;
 };
 
@@ -97,8 +97,8 @@ const getUserPosts = async (
   response: Response,
   next: NextFunction
 ) => {
-  const username = request.params.username;
-  const res: any = await getUserPostsHandler(username);
+  const id = request.params.id;
+  const res: any = await getUserPostsHandler(id);
   response.status(res.status).json(res.message);
 };
 
