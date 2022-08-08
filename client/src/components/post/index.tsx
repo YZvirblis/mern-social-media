@@ -7,6 +7,8 @@ import IUser from "../../interfaces/user.interface";
 import IPost from "../../interfaces/post.interface";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
+import { AdvancedImage } from "@cloudinary/react";
+import { Cloudinary, CloudinaryImage } from "@cloudinary/url-gen";
 
 interface props {
   post: IPost;
@@ -16,6 +18,13 @@ function Post({ post }: props): JSX.Element {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState<IUser | undefined>(undefined);
+
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: "memore",
+    },
+  });
+  const myImage = cld.image(post.img);
 
   const fetchPostUser = async (userID: string) => {
     const res = await userAPI.getUser(userID);
@@ -56,7 +65,10 @@ function Post({ post }: props): JSX.Element {
             </div>
             <div className="postCenter">
               <span className="postText">{post.desc}</span>
-              <img src={post.img} alt="" className="postImg" />
+              {post.img ? (
+                <AdvancedImage cldImg={myImage} className="postImg" />
+              ) : // <img src={post.img} alt="" className="postImg" />
+              null}
             </div>
             <div className="postBottom">
               <div className="postBottomLeft">

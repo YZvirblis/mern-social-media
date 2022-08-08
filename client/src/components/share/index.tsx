@@ -3,26 +3,32 @@ import "./share.css";
 import { PermMedia, Label, Room, EmojiEmotions } from "@material-ui/icons";
 import * as PostController from "../../api/post.api.controller";
 import IPost from "../../interfaces/post.interface";
+import * as cloudinaryController from "../../api/cloudinary.api.controller";
 
 function Share({ updatePosts }: any) {
   const [postText, setPostText] = useState("");
+  const [image, setImage] = useState(undefined);
 
   //@ts-ignore
   const currentUser = JSON.parse(window.localStorage.getItem("user"));
-  //@ts-ignore
 
   const sharePost = async (e: any) => {
-    const now = new Date();
     e.preventDefault();
+    const now = new Date();
+    const postImage = image
+      ? await cloudinaryController.upload(image)
+      : undefined;
     const post: IPost = {
       userID: currentUser._id,
       createdAt: now,
+      img: postImage,
       desc: postText,
       likes: [],
     };
     await PostController.createPost(post);
     updatePosts();
   };
+
   return (
     <div className="share">
       <div className="shareWrapper">
@@ -42,9 +48,26 @@ function Share({ updatePosts }: any) {
         <hr className="shareHr" />
         <div className="shareBottom">
           <div className="shareOptions">
-            <div className="shareOption">
+            <div
+              className="shareOption"
+              onClick={
+                //@ts-ignore
+                () => document.getElementById("selectFileInput").click()
+              }
+            >
               <PermMedia htmlColor="tomato" className="shareIcon"></PermMedia>
               <span className="shareOptionText">Photo or Video</span>
+              <input
+                id="selectFileInput"
+                type="file"
+                accept="image/png, image/gif, image/jpeg"
+                multiple={false}
+                onChange={
+                  //@ts-ignore
+                  (e) => setImage(e.target.files[0])
+                }
+                style={{ display: "none" }}
+              />
             </div>
             <div className="shareOption">
               <Label htmlColor="blue" className="shareIcon"></Label>
