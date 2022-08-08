@@ -64,11 +64,10 @@ function Post({ post }: props): JSX.Element {
               </div>
             </div>
             <div className="postCenter">
-              <span className="postText">{post.desc}</span>
+              {post.desc ? <span className="postText">{post.desc}</span> : null}
               {post.img ? (
                 <AdvancedImage cldImg={myImage} className="postImg" />
-              ) : // <img src={post.img} alt="" className="postImg" />
-              null}
+              ) : null}
             </div>
             <div className="postBottom">
               <div className="postBottomLeft">
