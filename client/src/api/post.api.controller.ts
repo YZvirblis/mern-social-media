@@ -16,5 +16,12 @@ const createPost = async (post: IPost) => {
     console.log(err);
   }
 };
+const deletePost = async (postID: string | undefined, userID: string) => {
+  try {
+    const res = await axios.delete(`/post/delete/${postID}/${userID}`);
+  } catch (err) {
+    console.log("ERROR: ", err);
+  }
+};
 
-export { getFeed, getUserPosts, createPost };
+export { getFeed, getUserPosts, createPost, deletePost };

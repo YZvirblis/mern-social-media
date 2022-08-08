@@ -9,15 +9,19 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary, CloudinaryImage } from "@cloudinary/url-gen";
+import * as postController from "../../api/post.api.controller";
 
 interface props {
   post: IPost;
+  updatePosts: Function;
+  currentUserID: string;
 }
 
-function Post({ post }: props): JSX.Element {
+function Post({ post, updatePosts, currentUserID }: props): JSX.Element {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [showMore, setShowMore] = useState(false);
 
   const cld = new Cloudinary({
     cloud: {
@@ -59,9 +63,39 @@ function Post({ post }: props): JSX.Element {
                 <span className="postUsername">{user.username}</span>
                 <span className="postDate">{format(post.createdAt)}</span>
               </div>
-              <div className="postTopRight">
-                <MoreVert />
-              </div>
+              {currentUserID === post.userID ? (
+                !showMore ? (
+                  <div
+                    className="postTopRight"
+                    onClick={() => setShowMore(!showMore)}
+                  >
+                    <MoreVert />
+                  </div>
+                ) : (
+                  <div className="showMoreMenu">
+                    {/* <span className="showMoreOption">Edit</span> */}
+                    <span
+                      className="showMoreOption"
+                      onClick={async () => {
+                        await postController.deletePost(
+                          post._id,
+                          currentUserID
+                        );
+                        setShowMore(!showMore);
+                        updatePosts();
+                      }}
+                    >
+                      Delete
+                    </span>
+                    <span
+                      className="showMoreOption"
+                      onClick={() => setShowMore(!showMore)}
+                    >
+                      Cancel
+                    </span>
+                  </div>
+                )
+              ) : null}
             </div>
             <div className="postCenter">
               {post.desc ? <span className="postText">{post.desc}</span> : null}

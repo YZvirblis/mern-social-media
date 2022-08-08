@@ -13,7 +13,7 @@ const PostController = () => {
   const router = Router();
   router.post("/create/", createPost);
   router.put("/update/:id", updatePost);
-  router.delete("/delete/:id", deletePost);
+  router.delete("/delete/:postid/:userid", deletePost);
   router.put("/like/:id", likePost);
   router.get("/single/:id", getPost);
   router.get("/feed/:id", getPosts);
@@ -50,8 +50,8 @@ const deletePost = async (
   response: Response,
   next: NextFunction
 ) => {
-  const postID = request.params.id;
-  const userID = request.body.userID;
+  const postID = request.params.postid;
+  const userID = request.params.userid;
   const res: any = await deletePostHandler(postID, userID);
   response.status(res.status).json(res.message);
 };

@@ -37,10 +37,9 @@ const updatePostHandler = async (postID: string, postUpdate: IPost) => {
 
 // DELETE POST
 const deletePostHandler = async (postID: string, userID: string) => {
+  console.log(postID, userID);
   try {
     const post = await Post.findById(postID);
-    console.log(post);
-    console.log(post?.userID, userID);
     if (post && post.userID === userID) {
       await post.deleteOne();
       return {

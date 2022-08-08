@@ -40,7 +40,14 @@ function Feed({ isProfile }: props): JSX.Element {
             );
           })
           .map((p: IPost) => {
-            return <Post key={p._id} post={p} />;
+            return (
+              <Post
+                currentUserID={currentUser._id}
+                updatePosts={fetchTimeline}
+                key={p._id}
+                post={p}
+              />
+            );
           })}
       </div>
     </div>
