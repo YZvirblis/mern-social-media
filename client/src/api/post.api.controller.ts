@@ -16,11 +16,23 @@ const createPost = async (post: IPost) => {
     console.log(err);
   }
 };
-const deletePost = async (postID: string | undefined, userID: string) => {
-  try {
-    const res = await axios.delete(`/post/delete/${postID}/${userID}`);
-  } catch (err) {
-    console.log("ERROR: ", err);
+const deletePost = async (
+  postID: string | undefined,
+  userID: string,
+  photoPublicID: string | undefined
+) => {
+  if (photoPublicID) {
+    try {
+      await axios.delete(`/post/delete/${postID}/${userID}/${photoPublicID}`);
+    } catch (err) {
+      console.log("ERROR: ", err);
+    }
+  } else {
+    try {
+      await axios.delete(`/post/delete/${postID}/${userID}/noimage`);
+    } catch (err) {
+      console.log("ERROR: ", err);
+    }
   }
 };
 

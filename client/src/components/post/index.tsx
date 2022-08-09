@@ -79,7 +79,8 @@ function Post({ post, updatePosts, currentUserID }: props): JSX.Element {
                       onClick={async () => {
                         await postController.deletePost(
                           post._id,
-                          currentUserID
+                          currentUserID,
+                          post.img
                         );
                         setShowMore(!showMore);
                         updatePosts();

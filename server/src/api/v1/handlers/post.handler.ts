@@ -1,3 +1,4 @@
+import { v2 as cloudinary } from "cloudinary";
 import Post from "../models/post.model";
 import User from "../models/user.model";
 import IPost from "../interfaces/post.interface";
@@ -36,12 +37,16 @@ const updatePostHandler = async (postID: string, postUpdate: IPost) => {
 };
 
 // DELETE POST
-const deletePostHandler = async (postID: string, userID: string) => {
-  console.log(postID, userID);
+const deletePostHandler = async (
+  postID: string,
+  userID: string,
+  photoPublicID: string
+) => {
   try {
     const post = await Post.findById(postID);
     if (post && post.userID === userID) {
       await post.deleteOne();
+      photoPublicID && cloudinary.uploader.destroy(photoPublicID);
       return {
         message: "The post has been successfully deleted.",
         status: 200,

@@ -20,9 +20,9 @@ function HomePage() {
       <>
         <Topbar />
         <div className="homeContainer">
-          {/* <SideBar /> */}
+          <SideBar />
           <Feed />
-          {/* <RightBar /> */}
+          <RightBar />
         </div>
       </>
     );

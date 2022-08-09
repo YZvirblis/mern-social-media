@@ -13,7 +13,7 @@ const PostController = () => {
   const router = Router();
   router.post("/create/", createPost);
   router.put("/update/:id", updatePost);
-  router.delete("/delete/:postid/:userid", deletePost);
+  router.delete("/delete/:postid/:userid/:publicid", deletePost);
   router.put("/like/:id", likePost);
   router.get("/single/:id", getPost);
   router.get("/feed/:id", getPosts);
@@ -52,7 +52,8 @@ const deletePost = async (
 ) => {
   const postID = request.params.postid;
   const userID = request.params.userid;
-  const res: any = await deletePostHandler(postID, userID);
+  const photoPublicID = request.params.publicid;
+  const res: any = await deletePostHandler(postID, userID, photoPublicID);
   response.status(res.status).json(res.message);
 };
 

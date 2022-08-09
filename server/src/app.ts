@@ -5,9 +5,14 @@ import helmet from "helmet";
 import morgan from "morgan";
 import initializeApiRoutes from "./api/routes";
 import config from "config";
+import { v2 as cloudinary } from "cloudinary";
 
 const app = express();
 const PORT = process.env.PORT || 8800;
+const cloudinaryConfig = config.get("CLOUDINARY");
+
+//@ts-ignore
+cloudinary.config(cloudinaryConfig);
 dotenv.config();
 app.use(express.json());
 app.use(helmet());
